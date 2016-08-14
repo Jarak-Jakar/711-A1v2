@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,6 +17,11 @@ namespace CSServices
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
+
+        [OperationContract]
+        IEnumerable<string> getFiles();
+
+        Stream getFile(string fileName);
 
         // TODO: Add your service operations here
     }
