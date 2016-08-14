@@ -7,8 +7,8 @@ using System.Text;
 
 namespace CSServices
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
-    public class Service1 : IService1
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "ServerService" in both code and config file together.
+    public class ServerService : IServerService
     {
         public string GetData(int value)
         {
