@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cache.ServerServiceReference {
+namespace CSServices.ServerServiceReference {
     using System.Runtime.Serialization;
     using System;
     
@@ -85,25 +85,31 @@ namespace Cache.ServerServiceReference {
         System.Threading.Tasks.Task<string> GetDataAsync(int value);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IServerService/GetDataUsingDataContractResponse")]
-        Cache.ServerServiceReference.CompositeType GetDataUsingDataContract(Cache.ServerServiceReference.CompositeType composite);
+        CSServices.ServerServiceReference.CompositeType GetDataUsingDataContract(CSServices.ServerServiceReference.CompositeType composite);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IServerService/GetDataUsingDataContractResponse")]
-        System.Threading.Tasks.Task<Cache.ServerServiceReference.CompositeType> GetDataUsingDataContractAsync(Cache.ServerServiceReference.CompositeType composite);
+        System.Threading.Tasks.Task<CSServices.ServerServiceReference.CompositeType> GetDataUsingDataContractAsync(CSServices.ServerServiceReference.CompositeType composite);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getFiles", ReplyAction="http://tempuri.org/IServerService/getFilesResponse")]
         string[] getFiles();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getFiles", ReplyAction="http://tempuri.org/IServerService/getFilesResponse")]
         System.Threading.Tasks.Task<string[]> getFilesAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getFile", ReplyAction="http://tempuri.org/IServerService/getFileResponse")]
+        System.IO.Stream getFile(string fileName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getFile", ReplyAction="http://tempuri.org/IServerService/getFileResponse")]
+        System.Threading.Tasks.Task<System.IO.Stream> getFileAsync(string fileName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IServerServiceChannel : Cache.ServerServiceReference.IServerService, System.ServiceModel.IClientChannel {
+    public interface IServerServiceChannel : CSServices.ServerServiceReference.IServerService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServerServiceClient : System.ServiceModel.ClientBase<Cache.ServerServiceReference.IServerService>, Cache.ServerServiceReference.IServerService {
+    public partial class ServerServiceClient : System.ServiceModel.ClientBase<CSServices.ServerServiceReference.IServerService>, CSServices.ServerServiceReference.IServerService {
         
         public ServerServiceClient() {
         }
@@ -132,11 +138,11 @@ namespace Cache.ServerServiceReference {
             return base.Channel.GetDataAsync(value);
         }
         
-        public Cache.ServerServiceReference.CompositeType GetDataUsingDataContract(Cache.ServerServiceReference.CompositeType composite) {
+        public CSServices.ServerServiceReference.CompositeType GetDataUsingDataContract(CSServices.ServerServiceReference.CompositeType composite) {
             return base.Channel.GetDataUsingDataContract(composite);
         }
         
-        public System.Threading.Tasks.Task<Cache.ServerServiceReference.CompositeType> GetDataUsingDataContractAsync(Cache.ServerServiceReference.CompositeType composite) {
+        public System.Threading.Tasks.Task<CSServices.ServerServiceReference.CompositeType> GetDataUsingDataContractAsync(CSServices.ServerServiceReference.CompositeType composite) {
             return base.Channel.GetDataUsingDataContractAsync(composite);
         }
         
@@ -146,6 +152,14 @@ namespace Cache.ServerServiceReference {
         
         public System.Threading.Tasks.Task<string[]> getFilesAsync() {
             return base.Channel.getFilesAsync();
+        }
+        
+        public System.IO.Stream getFile(string fileName) {
+            return base.Channel.getFile(fileName);
+        }
+        
+        public System.Threading.Tasks.Task<System.IO.Stream> getFileAsync(string fileName) {
+            return base.Channel.getFileAsync(fileName);
         }
     }
 }

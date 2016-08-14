@@ -42,4 +42,20 @@ namespace CSServices
             return new FileStream(fileName, FileMode.Open, FileAccess.Read);
         }
     }
+
+    public class CacheService : ICacheService
+    {
+
+        ServerServiceReference.ServerServiceClient server = new ServerServiceReference.ServerServiceClient();
+
+        public IEnumerable<string> getFiles()
+        {
+            return server.getFiles();
+        }
+
+        public Stream getFile(string fileName)
+        {
+            return server.getFile(fileName);
+        }
+    }
 }

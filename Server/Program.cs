@@ -13,7 +13,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Uri baseAddress = new Uri("http://localhost:8082/Server");
+            Uri baseAddress = new Uri("http://localhost:8082/711A1/Server");
 
             using (ServiceHost host = new ServiceHost(typeof(ServerService), baseAddress))
             {

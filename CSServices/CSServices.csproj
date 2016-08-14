@@ -47,10 +47,55 @@
   <ItemGroup>
     <Compile Include="IServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\ServerServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Services.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Service References\ServerServiceReference\CSServices.ServerServiceReference.CompositeType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\ServerService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServerServiceReference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\Server.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

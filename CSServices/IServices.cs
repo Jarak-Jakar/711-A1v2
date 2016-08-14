@@ -21,9 +21,20 @@ namespace CSServices
         [OperationContract]
         IEnumerable<string> getFiles();
 
+        [OperationContract]
         Stream getFile(string fileName);
 
         // TODO: Add your service operations here
+    }
+
+    [ServiceContract]
+    public interface ICacheService
+    {
+        [OperationContract]
+        IEnumerable<string> getFiles();
+
+        [OperationContract]
+        Stream getFile(string fileName);
     }
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.
