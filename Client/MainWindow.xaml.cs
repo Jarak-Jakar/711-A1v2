@@ -20,14 +20,18 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private CacheServiceReference.CacheServiceClient cache;
+
         public MainWindow()
         {
             InitializeComponent();
+            cache = new CacheServiceReference.CacheServiceClient();
         }
 
-        private void getFilesButton_Click(object sender, RoutedEventArgs e)
+        private async void getFilesButton_Click(object sender, RoutedEventArgs e)
         {
-
+            filesListView.ItemsSource = await cache.getFilesAsync();
         }
     }
 }

@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Service References\CacheServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,6 +104,37 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CacheServiceReference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CacheServiceReference\Cache4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheServiceReference\Cache41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheServiceReference\Cache42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheServiceReference\Cache43.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheServiceReference\CacheService1.wsdl" />
+    <None Include="Service References\CacheServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CacheServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CacheServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CacheServiceReference\Cache1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

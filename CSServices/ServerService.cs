@@ -43,19 +43,19 @@ namespace CSServices
         }
     }
 
-    public class CacheService : ICacheService
-    {
+    //public class CacheService : ICacheService
+    //{
 
-        ServerServiceReference.ServerServiceClient server = new ServerServiceReference.ServerServiceClient();
+    //    ServerServiceReference.ServerServiceClient server = new ServerServiceReference.ServerServiceClient();
 
-        public IEnumerable<string> getFiles()
-        {
-            return server.getFiles();
-        }
+    //    public IEnumerable<string> getFiles()
+    //    {
+    //        return server.getFiles();
+    //    }
 
-        public Stream getFile(string fileName)
-        {
-            return server.getFile(fileName);
-        }
-    }
+    //    public Stream getFile(string fileName)
+    //    {
+    //        return server.getFile(fileName);
+    //    }
+    //}
 }

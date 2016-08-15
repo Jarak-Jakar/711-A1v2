@@ -57,6 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Service References\ServerServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +98,22 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Service References\ServerServiceReference\Server.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\Server4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\ServerService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -105,6 +126,24 @@
       <Project>{F3BE8BA6-772A-498F-8781-D01FE9C1659A}</Project>
       <Name>CSServices</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServerServiceReference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\Server.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServerServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

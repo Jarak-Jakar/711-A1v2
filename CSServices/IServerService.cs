@@ -27,15 +27,15 @@ namespace CSServices
         // TODO: Add your service operations here
     }
 
-    [ServiceContract]
-    public interface ICacheService
-    {
-        [OperationContract]
-        IEnumerable<string> getFiles();
+    //[ServiceContract]
+    //public interface ICacheService
+    //{
+    //    [OperationContract]
+    //    IEnumerable<string> getFiles();
 
-        [OperationContract]
-        Stream getFile(string fileName);
-    }
+    //    [OperationContract]
+    //    Stream getFile(string fileName);
+    //}
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.
     // You can add XSD files into the project. After building the project, you can directly use the data types defined there, with the namespace "CSServices.ContractType".
