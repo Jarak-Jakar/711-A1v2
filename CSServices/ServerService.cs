@@ -33,13 +33,31 @@ namespace CSServices
         {
             foreach (string fname in Directory.EnumerateFiles(Directory.GetCurrentDirectory() + "/server/"))
             {
-                yield return Path.GetFileName(fname); 
+                yield return Path.GetFileName(fname);
             }
         }
 
         public Stream getFile(string fileName)
         {
-            return new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            try
+            {
+                return new FileStream(Directory.GetCurrentDirectory() + "/server/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous);
+                /*FileStream toreturn = new FileStream(Directory.GetCurrentDirectory() + "/server/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous);
+                System.Windows.MessageBox.Show("toreturn is null? " + (toreturn == null), "ServerService here", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                FileStream output = new FileStream(Directory.GetCurrentDirectory() + "/server/test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite, 4096, FileOptions.Asynchronous);
+                toreturn.CopyTo(output);
+                output.FlushAsync();
+                output.Dispose();
+                toreturn.Seek(0, SeekOrigin.Begin);
+                return toreturn;*/
+            }
+            catch (Exception exp)
+            {
+
+                //Console.Error.WriteLine("getFile error: " + exp.Message);
+                System.Windows.MessageBox.Show(exp.Message, "Server error!", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return null;
+            }
         }
     }
 

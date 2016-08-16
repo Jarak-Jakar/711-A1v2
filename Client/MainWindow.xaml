@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Client application" Height="350" Width="525">
     <Grid>
         <DockPanel LastChildFill="False" Margin="0">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                 <Button x:Name="getFilesButton" Content="Get file list" VerticalAlignment="Bottom" Click="getFilesButton_Click"/>
-                <Button x:Name="button1" Content="Button" VerticalAlignment="Bottom"/>
+                <Button x:Name="fileGetButton" Content="Get selected file" VerticalAlignment="Bottom" Click="fileGetButton_Click"/>
             </StackPanel>
-            <ListView x:Name="filesListView" DockPanel.Dock="Top">
+            <ListView x:Name="filesListView" DockPanel.Dock="Top" Margin="-153,0,0,0">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>
