@@ -42,12 +42,13 @@ namespace Client
                 string filename = filesListView.SelectedItem as string;
                 //MessageBox.Show("The filename is: " + filename);
                 //using (FileStream infile = await cache.getFileAsync(filename) as FileStream)
-                using (FileStream infile = (await cache.getFileAsync(filename)) as FileStream)
+                using (Stream infile = await cache.getFileAsync(filename))
                 {
+                    //MessageBox.Show("Is infile null? " + (infile == null), "Client Service here", MessageBoxButton.OK, MessageBoxImage.Information);
                 //FileStream infile = (await cache.getFileAsync(filename)) as FileStream;
-                    using (FileStream writefile = new FileStream(Directory.GetCurrentDirectory() + "/client/" + filename, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, FileOptions.Asynchronous))
+                    using (FileStream writefile = new FileStream(Directory.GetCurrentDirectory() + "/client/" + filename, FileMode.Create, FileAccess.Write, FileShare.Read))
                     {
-                        infile.Seek(0, SeekOrigin.Begin);
+                        //infile.Seek(0, SeekOrigin.Begin);
                         await infile.CopyToAsync(writefile);
                         await writefile.FlushAsync();
                     }
@@ -55,7 +56,7 @@ namespace Client
             }
             catch (Exception exp)
             {
-                MessageBox.Show(exp.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exp.Message + "\n\n\n" + exp.InnerException.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -22,6 +22,7 @@ namespace Server
                 //smb.HttpGetEnabled = true;
                 //smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
                 //host.Description.Behaviors.Add(smb);
+                DispatcherSynchronizationBehavior dsb = new DispatcherSynchronizationBehavior(true, 10);
 
                 // Open the ServiceHost to start listening for messages. Since
                 // no endpoints are explicitly configured, the runtime will create
