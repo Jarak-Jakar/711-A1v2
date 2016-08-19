@@ -53,17 +53,54 @@ namespace Cache
             // by the service.
             host.Open();
 
+            System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "/cache/");
+
         }
 
         private void getFilesButton_Click(object sender, RoutedEventArgs e)
         {
             //Console.WriteLine("I'm writing to the console!");
-            filesList.ItemsSource = server.getFiles();
+            //filesList.ItemsSource = server.getFiles();
+            logTextBox.Visibility = Visibility.Collapsed;
+            logTextBox.Text = "blank";
+            filesList.ItemsSource = getListOfFiles();
+            filesList.Visibility = Visibility.Visible;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             host.Close();
+        }
+
+        private System.Collections.Generic.IEnumerable<string> getListOfFiles()
+        {
+            foreach (string fname in System.IO.Directory.EnumerateFiles(System.IO.Directory.GetCurrentDirectory() + "/cache/"))
+            {
+                yield return System.IO.Path.GetFileName(fname);
+            }
+        }
+
+        private void viewLogButton_Click(object sender, RoutedEventArgs e)
+        {
+            filesList.Visibility = Visibility.Collapsed;
+            logTextBox.Text = System.IO.File.ReadAllText("cachelog.txt");
+            logTextBox.Visibility = Visibility.Visible;
+        }
+
+        private void clearCacheButton_Click(object sender, RoutedEventArgs e)
+        {
+            var tobedeleted = getListOfFiles();
+
+            foreach (var filetbd in tobedeleted)
+            {
+                System.IO.File.Delete(System.IO.Directory.GetCurrentDirectory() + "/cache/" + filetbd);
+            }
+
+            using (System.IO.StreamWriter logout = new System.IO.StreamWriter("cachelog.txt", true))
+            {
+                logout.WriteLineAsync(string.Format("\n\nUser request: Clear cache at {0}", DateTime.Now.ToString("f")));
+                logout.WriteLineAsync(string.Format("Response: Cache cleared"));
+            }
         }
     }
 }

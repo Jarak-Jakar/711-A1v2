@@ -10,15 +10,17 @@
         <DockPanel LastChildFill="False" Margin="0">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
                 <Button x:Name="getFilesButton" Content="Get file list" VerticalAlignment="Bottom" Click="getFilesButton_Click"/>
-                <Button x:Name="button1" Content="Button" VerticalAlignment="Bottom"/>
+                <Button x:Name="viewLogButton" Content="View cache log" VerticalAlignment="Bottom" Click="viewLogButton_Click"/>
+                <Button x:Name="clearCacheButton" Content="Clear cached files" Click="clearCacheButton_Click"/>
             </StackPanel>
-            <ListView x:Name="filesList" DockPanel.Dock="Top">
+            <ListView x:Name="filesList" DockPanel.Dock="Top" Visibility="Collapsed">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>
                     </GridView>
                 </ListView.View>
             </ListView>
+            <TextBox x:Name="logTextBox" TextWrapping="Wrap" Text="TextBox" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Visibility="Collapsed"/>
         </DockPanel>
 
     </Grid>

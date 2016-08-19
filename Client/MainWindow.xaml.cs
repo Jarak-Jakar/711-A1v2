@@ -28,10 +28,12 @@ namespace Client
         {
             InitializeComponent();
             cache = new CacheServiceReference.CacheServiceClient();
+            System.IO.Directory.CreateDirectory(System.IO.Directory.GetCurrentDirectory() + "/client/");
         }
 
         private async void getFilesButton_Click(object sender, RoutedEventArgs e)
         {
+            filesListView.Visibility = Visibility.Visible;
             filesListView.ItemsSource = await cache.getFilesAsync();
         }
 
@@ -58,6 +60,23 @@ namespace Client
             {
                 MessageBox.Show(exp.Message + "\n\n\n" + exp.InnerException.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private async void openFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = filesListView.SelectedItem as string;
+            if (!File.Exists(Directory.GetCurrentDirectory() + "/client/" + filename))
+            {
+                using (Stream infile = await cache.getFileAsync(filename))
+                {
+                    using (FileStream writefile = new FileStream(Directory.GetCurrentDirectory() + "/client/" + filename, FileMode.Create, FileAccess.Write, FileShare.Read))
+                    {
+                        await infile.CopyToAsync(writefile);
+                        await writefile.FlushAsync();
+                    }
+                }
+            }
+            System.Diagnostics.Process.Start(Directory.GetCurrentDirectory() + "/client/" + filename);
         }
     }
 }
