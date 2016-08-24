@@ -34,13 +34,21 @@ namespace CSServices
             {
                 if (File.Exists(Directory.GetCurrentDirectory() + "/cache/" + fileName))
                 {
-                    using (StreamWriter logout = new StreamWriter(cachelog, true))
+                    if (!hasFileBeenUpdated(fileName))
                     {
-                        logout.WriteLineAsync(string.Format("\n\nUser request: Get file {0} at {1}", fileName, DateTime.Now.ToString("f")));
-                        logout.WriteLineAsync(string.Format("Response: Returned file {0} from cache\n\n", fileName));
-                    }
+                        using (StreamWriter logout = new StreamWriter(cachelog, true))
+                        {
+                            logout.WriteLineAsync(string.Format("\n\nUser request: Get file {0} at {1}", fileName, DateTime.Now.ToString("f")));
+                            logout.WriteLineAsync(string.Format("Response: Server file is unmodified compared to cache.  Returned file {0} from cache\n\n", fileName));
+                        }
 
-                    return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
+                    else
+                    {
+                        updateCachedFile(fileName);
+                        return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
                 }
                 else
                 {
@@ -81,6 +89,18 @@ namespace CSServices
                 MessageBox.Show(exp.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
+        }
+
+        private bool hasFileBeenUpdated(string filename)
+        {
+            DateTime serverTime = server.getLastWriteTime(filename);
+            int result = serverTime.CompareTo(Directory.GetCurrentDirectory() + "/cache/" + filename);
+            return result > 0;
+        }
+
+        private void updateCachedFile(string filename)
+        {
+
         }
     }
 }

@@ -24,6 +24,9 @@ namespace CSServices
         [OperationContract]
         Stream getFile(string fileName);
 
+        [OperationContract]
+        DateTime getLastWriteTime(string filename);
+
         // TODO: Add your service operations here
     }
 

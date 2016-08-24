@@ -101,6 +101,12 @@ namespace CSServices.ServerServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getFile", ReplyAction="http://tempuri.org/IServerService/getFileResponse")]
         System.Threading.Tasks.Task<System.IO.Stream> getFileAsync(string fileName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getLastWriteTime", ReplyAction="http://tempuri.org/IServerService/getLastWriteTimeResponse")]
+        System.DateTime getLastWriteTime(string filename);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getLastWriteTime", ReplyAction="http://tempuri.org/IServerService/getLastWriteTimeResponse")]
+        System.Threading.Tasks.Task<System.DateTime> getLastWriteTimeAsync(string filename);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -160,6 +166,14 @@ namespace CSServices.ServerServiceReference {
         
         public System.Threading.Tasks.Task<System.IO.Stream> getFileAsync(string fileName) {
             return base.Channel.getFileAsync(fileName);
+        }
+        
+        public System.DateTime getLastWriteTime(string filename) {
+            return base.Channel.getLastWriteTime(filename);
+        }
+        
+        public System.Threading.Tasks.Task<System.DateTime> getLastWriteTimeAsync(string filename) {
+            return base.Channel.getLastWriteTimeAsync(filename);
         }
     }
 }

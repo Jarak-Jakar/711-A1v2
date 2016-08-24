@@ -59,6 +59,11 @@ namespace CSServices
                 return null;
             }
         }
+
+        public DateTime getLastWriteTime(string filename)
+        {
+            return File.GetLastWriteTime(Directory.GetCurrentDirectory() + "/server/" + filename);
+        }
     }
 
     //public class CacheService : ICacheService
