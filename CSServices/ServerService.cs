@@ -64,6 +64,26 @@ namespace CSServices
         {
             return File.GetLastWriteTime(Directory.GetCurrentDirectory() + "/server/" + filename);
         }
+
+        public static IEnumerable<segmentDetails> divideAndClassifyFile(string fullfilepath)
+        {
+
+            //return new List<int>(5);
+        }
+
+        public struct segmentDetails
+        {
+            public readonly long startPos;
+            public readonly long segmentLength;
+            public readonly byte[] hashValue;
+
+            public segmentDetails(long startPos, long segmentLength, byte[] hashValue)
+            {
+                this.startPos = startPos;
+                this.segmentLength = segmentLength;
+                this.hashValue = hashValue;
+            }
+        }
     }
 
     //public class CacheService : ICacheService
