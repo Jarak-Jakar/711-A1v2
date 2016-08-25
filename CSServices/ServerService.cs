@@ -65,9 +65,28 @@ namespace CSServices
             return File.GetLastWriteTime(Directory.GetCurrentDirectory() + "/server/" + filename);
         }
 
-        public static IEnumerable<segmentDetails> divideAndClassifyFile(string fullfilepath)
+        public static IEnumerable<segmentDetails> breakFileIntoSegments(string fullfilepath)
         {
+            const int windowWidth = 64; // Size of the window in bytes
+            const int primeNumber = 3511;  // Base prime number used in the RK calculations
+            const long segmentDelimiter = (1 << 11) - 1; // Should mean that I get 2kiB segments, on average
 
+            long primePower = primeNumber;
+            for(int i = 0; i < windowWidth; i++)
+            {
+                primePower *= primeNumber; // Create the full power of the prime
+            }
+
+
+
+            using (FileStream fs = new FileStream(fullfilepath, FileMode.Open, FileAccess.Read))
+            {
+
+                byte[] moose = new byte[12];
+                yield return new segmentDetails(0, 58, moose);
+
+                Console.WriteLine("hello");
+            }
             //return new List<int>(5);
         }
 
