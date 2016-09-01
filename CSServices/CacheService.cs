@@ -100,7 +100,7 @@ namespace CSServices
 
         private void updateCachedFile(string filename)
         {
-            
+            ServerService.breakFileIntoSegments(Directory.GetCurrentDirectory() + "/cache/" + filename);
         }
     }
 }
