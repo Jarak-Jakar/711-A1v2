@@ -62,6 +62,12 @@
     <None Include="Service References\ServerServiceReference\CSServices.ServerServiceReference.CompositeType.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ServerServiceReference\CSServices.ServerServiceReference.ServerServicesegment.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServerServiceReference\CSServices.ServerServiceReference.tryCompareFilesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServerServiceReference\Server.xsd">
       <SubType>Designer</SubType>
     </None>

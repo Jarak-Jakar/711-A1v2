@@ -100,7 +100,10 @@ namespace CSServices
 
         private void updateCachedFile(string filename)
         {
-            ServerService.breakFileIntoSegments(Directory.GetCurrentDirectory() + "/cache/" + filename);
+            IEnumerable<ServerService.segmentDetails> cacheChunks = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename);
+            List<ServerService.segment> newServerChunks;
+            bool isDifferent = server.tryCompareFiles(filename, cacheChunks, out newServerChunks);
+
         }
     }
 }

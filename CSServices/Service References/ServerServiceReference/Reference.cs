@@ -11,8 +11,8 @@
 namespace CSServices.ServerServiceReference {
     using System.Runtime.Serialization;
     using System;
-    
-    
+    using System.Collections.Generic;
+
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="CompositeType", Namespace="http://schemas.datacontract.org/2004/07/CSServices")]
@@ -74,6 +74,62 @@ namespace CSServices.ServerServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServerService.segmentDetails", Namespace="http://schemas.datacontract.org/2004/07/CSServices")]
+    [System.SerializableAttribute()]
+    public partial struct ServerServicesegmentDetails : System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServerService.segment", Namespace="http://schemas.datacontract.org/2004/07/CSServices")]
+    [System.SerializableAttribute()]
+    public partial struct ServerServicesegment : System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServerServiceReference.IServerService")]
     public interface IServerService {
@@ -107,6 +163,53 @@ namespace CSServices.ServerServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/getLastWriteTime", ReplyAction="http://tempuri.org/IServerService/getLastWriteTimeResponse")]
         System.Threading.Tasks.Task<System.DateTime> getLastWriteTimeAsync(string filename);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/tryCompareFiles", ReplyAction="http://tempuri.org/IServerService/tryCompareFilesResponse")]
+        CSServices.ServerServiceReference.tryCompareFilesResponse tryCompareFiles(CSServices.ServerServiceReference.tryCompareFilesRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServerService/tryCompareFiles", ReplyAction="http://tempuri.org/IServerService/tryCompareFilesResponse")]
+        System.Threading.Tasks.Task<CSServices.ServerServiceReference.tryCompareFilesResponse> tryCompareFilesAsync(CSServices.ServerServiceReference.tryCompareFilesRequest request);
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="tryCompareFiles", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class tryCompareFilesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public string filename;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public CSServices.ServerServiceReference.ServerServicesegmentDetails[] cacheSegments;
+        
+        public tryCompareFilesRequest() {
+        }
+        
+        public tryCompareFilesRequest(string filename, CSServices.ServerServiceReference.ServerServicesegmentDetails[] cacheSegments) {
+            this.filename = filename;
+            this.cacheSegments = cacheSegments;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="tryCompareFilesResponse", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class tryCompareFilesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public bool tryCompareFilesResult;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public CSServices.ServerServiceReference.ServerServicesegment[] returnedChunks;
+        
+        public tryCompareFilesResponse() {
+        }
+        
+        public tryCompareFilesResponse(bool tryCompareFilesResult, CSServices.ServerServiceReference.ServerServicesegment[] returnedChunks) {
+            this.tryCompareFilesResult = tryCompareFilesResult;
+            this.returnedChunks = returnedChunks;
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -174,6 +277,29 @@ namespace CSServices.ServerServiceReference {
         
         public System.Threading.Tasks.Task<System.DateTime> getLastWriteTimeAsync(string filename) {
             return base.Channel.getLastWriteTimeAsync(filename);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        CSServices.ServerServiceReference.tryCompareFilesResponse CSServices.ServerServiceReference.IServerService.tryCompareFiles(CSServices.ServerServiceReference.tryCompareFilesRequest request) {
+            return base.Channel.tryCompareFiles(request);
+        }
+        
+        public bool tryCompareFiles(string filename, CSServices.ServerServiceReference.ServerServicesegmentDetails[] cacheSegments, out CSServices.ServerServiceReference.ServerServicesegment[] returnedChunks) {
+            CSServices.ServerServiceReference.tryCompareFilesRequest inValue = new CSServices.ServerServiceReference.tryCompareFilesRequest();
+            inValue.filename = filename;
+            inValue.cacheSegments = cacheSegments;
+            CSServices.ServerServiceReference.tryCompareFilesResponse retVal = ((CSServices.ServerServiceReference.IServerService)(this)).tryCompareFiles(inValue);
+            returnedChunks = retVal.returnedChunks;
+            return retVal.tryCompareFilesResult;
+        }
+        
+        public System.Threading.Tasks.Task<CSServices.ServerServiceReference.tryCompareFilesResponse> tryCompareFilesAsync(CSServices.ServerServiceReference.tryCompareFilesRequest request) {
+            return base.Channel.tryCompareFilesAsync(request);
+        }
+
+        internal bool tryCompareFiles(string filename, IEnumerable<ServerService.segmentDetails> cacheChunks, out List<ServerService.segment> newServerChunks)
+        {
+            throw new NotImplementedException();
         }
     }
 }

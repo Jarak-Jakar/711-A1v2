@@ -39,6 +39,12 @@
   <wsdl:message name="IServerService_getLastWriteTime_OutputMessage">
     <wsdl:part name="parameters" element="tns:getLastWriteTimeResponse" />
   </wsdl:message>
+  <wsdl:message name="IServerService_tryCompareFiles_InputMessage">
+    <wsdl:part name="parameters" element="tns:tryCompareFiles" />
+  </wsdl:message>
+  <wsdl:message name="IServerService_tryCompareFiles_OutputMessage">
+    <wsdl:part name="parameters" element="tns:tryCompareFilesResponse" />
+  </wsdl:message>
   <wsdl:portType name="IServerService">
     <wsdl:operation name="GetData">
       <wsdl:input wsaw:Action="http://tempuri.org/IServerService/GetData" message="tns:IServerService_GetData_InputMessage" />
@@ -59,6 +65,10 @@
     <wsdl:operation name="getLastWriteTime">
       <wsdl:input wsaw:Action="http://tempuri.org/IServerService/getLastWriteTime" message="tns:IServerService_getLastWriteTime_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IServerService/getLastWriteTimeResponse" message="tns:IServerService_getLastWriteTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="tryCompareFiles">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServerService/tryCompareFiles" message="tns:IServerService_tryCompareFiles_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServerService/tryCompareFilesResponse" message="tns:IServerService_tryCompareFiles_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IServerService" type="tns:IServerService">
@@ -101,6 +111,15 @@
     </wsdl:operation>
     <wsdl:operation name="getLastWriteTime">
       <soap:operation soapAction="http://tempuri.org/IServerService/getLastWriteTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="tryCompareFiles">
+      <soap:operation soapAction="http://tempuri.org/IServerService/tryCompareFiles" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

@@ -27,6 +27,9 @@ namespace CSServices
         [OperationContract]
         DateTime getLastWriteTime(string filename);
 
+        [OperationContract]
+        bool tryCompareFiles(string filename, IEnumerable<ServerService.segmentDetails> cacheSegments, out List<ServerService.segment> returnedChunks);
+
         // TODO: Add your service operations here
     }
 

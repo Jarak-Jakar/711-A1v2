@@ -126,6 +126,32 @@ namespace CSServices
                 this.segmentLength = segmentLength;
                 this.hashValue = hashValue;
             }
+
+            public bool Equals(segmentDetails sd)
+            {
+                return (hashValue.SequenceEqual(sd.hashValue));
+            }
+        }
+
+        public struct segment
+        {
+            public readonly long startPos;
+            public readonly long segmentLength;
+            public readonly byte[] fileChunk;
+
+            public segment(long startPos, long segmentLength, byte[] fileChunk)
+            {
+                this.startPos = startPos;
+                this.segmentLength = segmentLength;
+                this.fileChunk = fileChunk;
+            }
+
+            public segment(segmentDetails sd, byte[] fileChunk)
+            {
+                this.startPos = sd.startPos;
+                this.segmentLength = sd.segmentLength;
+                this.fileChunk = fileChunk;
+            }
         }
 
         private static long startHash(byte[] firstBit, int hashlength, int primeNumber)
@@ -192,17 +218,39 @@ namespace CSServices
                     }
 
                     firstOffset = 0; // After the first loop, always start at the first byte of the new buffer load
-
+                    
                     bytesRead = fs.Read(streamBuffer, 0, streamBufferSize);
                     
                 }
 
                 yield return new segmentDetails(lastStartPos, sbPos - lastStartPos, hasher.ComputeHash(chunkBuffer, 0, cbPos + 1));  // Hash the final chunk
             }
+        }
 
+        // returns true if there is a difference between the files, and returns the differing chunks via the out variable
+        public bool tryCompareFiles(string filename, IEnumerable<segmentDetails> cacheSegments, out List<segment> returnedChunks)
+        {
+            bool difference = false;
+            IEnumerable<segmentDetails> serverSegments = chunkFile(Directory.GetCurrentDirectory() + "/server/" + filename);
+            returnedChunks = new List<segment>();
 
-
-            
+            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/server/" + filename, FileMode.Open, FileAccess.Read))
+            {
+                var diffs = serverSegments.AsParallel().Except(cacheSegments.AsParallel());
+                if (diffs.Count() > 0)
+                {
+                    difference = true;
+                    returnedChunks.Capacity = diffs.Count();
+                    foreach (var entry in diffs)
+                    {
+                        fs.Seek(entry.startPos, SeekOrigin.Begin);
+                        byte[] temp = new byte[entry.segmentLength];
+                        fs.Read(temp, 0, (int)entry.segmentLength);
+                        returnedChunks.Add(new segment(entry, temp));
+                    } 
+                }
+            }
+            return difference;
         }
     }
 
