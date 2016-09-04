@@ -8,34 +8,42 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="CompositeType" nillable="true" type="tns:CompositeType" />
-  <xs:complexType name="ArrayOfServerService.segmentDetails">
+  <xs:complexType name="ArrayOfsegmentDetails">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ServerService.segmentDetails" type="tns:ServerService.segmentDetails" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="segmentDetails" type="tns:segmentDetails" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfServerService.segmentDetails" nillable="true" type="tns:ArrayOfServerService.segmentDetails" />
-  <xs:complexType name="ServerService.segmentDetails">
+  <xs:element name="ArrayOfsegmentDetails" nillable="true" type="tns:ArrayOfsegmentDetails" />
+  <xs:complexType name="segmentDetails">
     <xs:annotation>
       <xs:appinfo>
         <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
       </xs:appinfo>
     </xs:annotation>
-    <xs:sequence />
-  </xs:complexType>
-  <xs:element name="ServerService.segmentDetails" nillable="true" type="tns:ServerService.segmentDetails" />
-  <xs:complexType name="ArrayOfServerService.segment">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ServerService.segment" type="tns:ServerService.segment" />
+      <xs:element minOccurs="0" name="hashValue" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="segmentLength" type="xs:long" />
+      <xs:element minOccurs="0" name="startPos" type="xs:long" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfServerService.segment" nillable="true" type="tns:ArrayOfServerService.segment" />
-  <xs:complexType name="ServerService.segment">
+  <xs:element name="segmentDetails" nillable="true" type="tns:segmentDetails" />
+  <xs:complexType name="ArrayOfsegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="segment" type="tns:segment" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfsegment" nillable="true" type="tns:ArrayOfsegment" />
+  <xs:complexType name="segment">
     <xs:annotation>
       <xs:appinfo>
         <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
       </xs:appinfo>
     </xs:annotation>
-    <xs:sequence />
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fileChunk" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="segmentLength" type="xs:long" />
+      <xs:element minOccurs="0" name="startPos" type="xs:long" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="ServerService.segment" nillable="true" type="tns:ServerService.segment" />
+  <xs:element name="segment" nillable="true" type="tns:segment" />
 </xs:schema>

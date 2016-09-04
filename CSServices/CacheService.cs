@@ -6,6 +6,10 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Windows;
+using CSServices;
+using CSServices.ServerServiceReference;
+using CSServices.ContractTypes;
+using System.Collections;
 
 namespace CSServices
 {
@@ -14,7 +18,7 @@ namespace CSServices
     public class CacheService : ICacheService
     {
 
-        ServerServiceReference.ServerServiceClient server = new ServerServiceReference.ServerServiceClient();
+        ServerServiceClient server = new ServerServiceClient();
 
         string cachelog = "cachelog.txt";
 
@@ -34,7 +38,7 @@ namespace CSServices
             {
                 if (File.Exists(Directory.GetCurrentDirectory() + "/cache/" + fileName))
                 {
-                    if (!hasFileBeenUpdated(fileName))
+                    if (false) //if (!hasFileBeenUpdated(fileName))
                     {
                         using (StreamWriter logout = new StreamWriter(cachelog, true))
                         {
@@ -47,6 +51,11 @@ namespace CSServices
                     else
                     {
                         updateCachedFile(fileName);
+                        using (StreamWriter logout = new StreamWriter(cachelog, true))
+                        {
+                            logout.WriteLineAsync(string.Format("\n\nUser request: Get file {0} at {1}", fileName, DateTime.Now.ToString("f")));
+                            logout.WriteLineAsync(string.Format("Response: Server file is modified compared to cache.  Returned file {0} from cache after updating from server\n\n", fileName));
+                        }
                         return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                     }
                 }
@@ -94,16 +103,29 @@ namespace CSServices
         private bool hasFileBeenUpdated(string filename)
         {
             DateTime serverTime = server.getLastWriteTime(filename);
-            int result = serverTime.CompareTo(Directory.GetCurrentDirectory() + "/cache/" + filename);
+            int result = serverTime.CompareTo(File.GetLastWriteTime(Directory.GetCurrentDirectory() + "/cache/" + filename));
             return result > 0;
         }
 
         private void updateCachedFile(string filename)
         {
-            IEnumerable<ServerService.segmentDetails> cacheChunks = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename);
-            List<ServerService.segment> newServerChunks;
-            bool isDifferent = server.tryCompareFiles(filename, cacheChunks, out newServerChunks);
+            var cacheChunks = server.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToList();
+            //var cacheChunks = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToArray();
+            List<ServerServiceReference.segment> newServerChunks; //= server.compareFiles(filename, cacheChunks);
+            List<ServerServiceReference.segmentDetails> serverDetails;
+            bool isDifferent = server.tCompareFiles(filename, cacheChunks, out newServerChunks, out serverDetails);
+            if(isDifferent)
+            {
+                for(int i = 0; i < serverDetails.Count; i++)
+                {
+                    if ((serverDetails[i].startPos == cacheChunks[i].startPos) && (StructuralComparisons.StructuralEqualityComparer.Equals(serverDetails[i].hashValue, cacheChunks[i].hashValue)))
+                    {
+                        continue;
+                    } else if () {
 
+                    }
+                }
+            }
         }
     }
 }

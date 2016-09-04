@@ -114,6 +114,7 @@ namespace CSServices
             //return new List<int>(5);
         }
 
+        /*[DataContract]
         public struct segmentDetails
         {
             public readonly long startPos;
@@ -133,6 +134,7 @@ namespace CSServices
             }
         }
 
+        [DataContract]
         public struct segment
         {
             public readonly long startPos;
@@ -152,7 +154,7 @@ namespace CSServices
                 this.segmentLength = sd.segmentLength;
                 this.fileChunk = fileChunk;
             }
-        }
+        }*/
 
         private static long startHash(byte[] firstBit, int hashlength, int primeNumber)
         {
@@ -167,7 +169,7 @@ namespace CSServices
             return returnHash;
         }
 
-        public static IEnumerable<segmentDetails> chunkFile(string fullfilepath)
+        public IEnumerable<segmentDetails> chunkFile(string fullfilepath)
         {
             const byte windowSize = 16;  // Size of sliding window
             const int primeNumber = 43;
@@ -228,18 +230,43 @@ namespace CSServices
         }
 
         // returns true if there is a difference between the files, and returns the differing chunks via the out variable
-        public bool tryCompareFiles(string filename, IEnumerable<segmentDetails> cacheSegments, out List<segment> returnedChunks)
+        public bool tCompareFiles(string tCF_filename, IEnumerable<CSServices.segmentDetails> tCF_cacheSegments, out List<segment> tCF_returnedChunks, out List<segmentDetails> tCF_serverDetails)
         {
             bool difference = false;
-            IEnumerable<segmentDetails> serverSegments = chunkFile(Directory.GetCurrentDirectory() + "/server/" + filename);
-            returnedChunks = new List<segment>();
+            tCF_serverDetails = chunkFile(Directory.GetCurrentDirectory() + "/server/" + tCF_filename).ToList();
+            tCF_returnedChunks = new List<segment>();
 
-            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/server/" + filename, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/server/" + tCF_filename, FileMode.Open, FileAccess.Read))
             {
-                var diffs = serverSegments.AsParallel().Except(cacheSegments.AsParallel());
+                var diffs = tCF_serverDetails.AsParallel().Except(tCF_cacheSegments.AsParallel());
                 if (diffs.Count() > 0)
                 {
                     difference = true;
+                    tCF_returnedChunks.Capacity = diffs.Count();
+                    foreach (var entry in diffs)
+                    {
+                        fs.Seek(entry.startPos, SeekOrigin.Begin);
+                        byte[] temp = new byte[entry.segmentLength];
+                        fs.Read(temp, 0, (int)entry.segmentLength);
+                        tCF_returnedChunks.Add(new segment(entry, temp));
+                    } 
+                }
+            }
+            return difference;
+        }
+
+        public List<segment> compareFiles(string tCF_filename, IEnumerable<segmentDetails> tCF_cacheSegments)
+        {
+            //bool difference = false;
+            IEnumerable<segmentDetails> serverSegments = chunkFile(Directory.GetCurrentDirectory() + "/server/" + tCF_filename);
+            List<segment> returnedChunks = new List<segment>();
+
+            using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/server/" + tCF_filename, FileMode.Open, FileAccess.Read))
+            {
+                var diffs = serverSegments.AsParallel().Except(tCF_cacheSegments.AsParallel());
+                if (diffs.Count() > 0)
+                {
+                    //difference = true;
                     returnedChunks.Capacity = diffs.Count();
                     foreach (var entry in diffs)
                     {
@@ -247,10 +274,10 @@ namespace CSServices
                         byte[] temp = new byte[entry.segmentLength];
                         fs.Read(temp, 0, (int)entry.segmentLength);
                         returnedChunks.Add(new segment(entry, temp));
-                    } 
+                    }
                 }
             }
-            return difference;
+            return returnedChunks;
         }
     }
 

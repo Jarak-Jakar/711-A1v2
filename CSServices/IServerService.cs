@@ -28,7 +28,13 @@ namespace CSServices
         DateTime getLastWriteTime(string filename);
 
         [OperationContract]
-        bool tryCompareFiles(string filename, IEnumerable<ServerService.segmentDetails> cacheSegments, out List<ServerService.segment> returnedChunks);
+        bool tCompareFiles(string tCF_filename, IEnumerable<CSServices.segmentDetails> tCF_cacheSegments, out List<segment> tCF_returnedChunks, out List<segmentDetails> tCF_serverDetails);
+
+        [OperationContract]
+        List<segment> compareFiles(string tCF_filename, IEnumerable<segmentDetails> tCF_cacheSegments);
+
+        [OperationContract]
+        IEnumerable<segmentDetails> chunkFile(string fullfilepath);
 
         // TODO: Add your service operations here
     }
@@ -63,6 +69,58 @@ namespace CSServices
         {
             get { return stringValue; }
             set { stringValue = value; }
+        }
+    }
+
+    [DataContract]
+    public struct segmentDetails
+    {
+        [DataMember]
+        public readonly long startPos;
+
+        [DataMember]
+        public readonly long segmentLength;
+
+        [DataMember]
+        public readonly byte[] hashValue;
+
+        public segmentDetails(long startPos, long segmentLength, byte[] hashValue)
+        {
+            this.startPos = startPos;
+            this.segmentLength = segmentLength;
+            this.hashValue = hashValue;
+        }
+
+        public bool Equals(segmentDetails sd)
+        {
+            return (hashValue.SequenceEqual(sd.hashValue));
+        }
+    }
+
+    [DataContract]
+    public struct segment
+    {
+        [DataMember]
+        public readonly long startPos;
+
+        [DataMember]
+        public readonly long segmentLength;
+
+        [DataMember]
+        public readonly byte[] fileChunk;
+
+        public segment(long startPos, long segmentLength, byte[] fileChunk)
+        {
+            this.startPos = startPos;
+            this.segmentLength = segmentLength;
+            this.fileChunk = fileChunk;
+        }
+
+        public segment(segmentDetails sd, byte[] fileChunk)
+        {
+            this.startPos = sd.startPos;
+            this.segmentLength = sd.segmentLength;
+            this.fileChunk = fileChunk;
         }
     }
 }
