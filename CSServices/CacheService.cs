@@ -38,7 +38,7 @@ namespace CSServices
             {
                 if (File.Exists(Directory.GetCurrentDirectory() + "/cache/" + fileName))
                 {
-                    if (false) //if (!hasFileBeenUpdated(fileName))
+                    if (!hasFileBeenUpdated(fileName))
                     {
                         using (StreamWriter logout = new StreamWriter(cachelog, true))
                         {
@@ -109,20 +109,60 @@ namespace CSServices
 
         private void updateCachedFile(string filename)
         {
-            var cacheChunks = server.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToList();
-            //var cacheChunks = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToArray();
-            List<ServerServiceReference.segment> newServerChunks; //= server.compareFiles(filename, cacheChunks);
+            var cacheDetails = server.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToList();
+            //var cacheDetails = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToArray();
+            List<ServerServiceReference.segment> newServerChunks; //= server.compareFiles(filename, cacheDetails);
             List<ServerServiceReference.segmentDetails> serverDetails;
-            bool isDifferent = server.tCompareFiles(filename, cacheChunks, out newServerChunks, out serverDetails);
+            bool isDifferent = server.tCompareFiles(filename, cacheDetails, out newServerChunks, out serverDetails);
             if(isDifferent)
             {
-                for(int i = 0; i < serverDetails.Count; i++)
+                using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/cache/" + filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    if ((serverDetails[i].startPos == cacheChunks[i].startPos) && (StructuralComparisons.StructuralEqualityComparer.Equals(serverDetails[i].hashValue, cacheChunks[i].hashValue)))
+                    using (var hasher = new System.Security.Cryptography.SHA256Cng())
                     {
-                        continue;
-                    } else if () {
+                        List<ServerServiceReference.segment> cacheChunks = new List<ServerServiceReference.segment>(cacheDetails.Count);
 
+                        // Create the chunks that are already cached
+                        foreach (var detail in cacheDetails)
+                        {
+                            fs.Seek(detail.startPos, SeekOrigin.Begin);
+                            var temp1 = new byte[detail.segmentLength];
+                            fs.Read(new byte[detail.segmentLength], 0, (int)detail.segmentLength);
+                            var temp2 = new ServerServiceReference.segment() { segmentLength = detail.segmentLength, startPos = detail.startPos, fileChunk = temp1 };
+                            cacheChunks.Add(temp2);
+                        }
+
+                        // Go through the serverDetails list, and put the right chunks in the right places
+                        for(int i = 0; i < serverDetails.Count; i++)
+                        {
+                            var detail = serverDetails[i];
+                            fs.Seek(detail.startPos, SeekOrigin.Begin);
+                            bool foundInCache = false;
+                            for(int j = 0; j < cacheDetails.Count; j++)
+                            {
+                                if (detail.hashValue.SequenceEqual(cacheDetails[j].hashValue))
+                                {
+                                    fs.Write(cacheChunks[j].fileChunk, (int) cacheChunks[j].startPos, (int) cacheChunks[j].segmentLength);
+                                    foundInCache = true;
+                                    break;
+                                }
+                            }
+                            if (foundInCache)
+                            {
+                                continue;
+                            }
+
+                            //fs.Write(newServerChunks[i].fileChunk, (int) newServerChunks[i].startPos, (int) newServerChunks[i].segmentLength);
+
+                            for(int j = 0; j < newServerChunks.Count; j++)
+                            {
+                                if(detail.startPos == newServerChunks[j].startPos)
+                                {
+                                    fs.Write(newServerChunks[j].fileChunk, (int)newServerChunks[j].startPos, (int)newServerChunks[j].segmentLength);
+                                    break;
+                                }
+                            }
+                        } 
                     }
                 }
             }

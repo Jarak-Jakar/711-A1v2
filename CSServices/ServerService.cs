@@ -226,6 +226,7 @@ namespace CSServices
                 }
 
                 yield return new segmentDetails(lastStartPos, sbPos - lastStartPos, hasher.ComputeHash(chunkBuffer, 0, cbPos + 1));  // Hash the final chunk
+                hasher.Dispose();
             }
         }
 
