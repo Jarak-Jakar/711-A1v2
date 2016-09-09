@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CSServices" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CSServices" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8082/711A1/Server?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
   <xs:complexType name="CompositeType">
     <xs:sequence>
       <xs:element minOccurs="0" name="BoolValue" type="xs:boolean" />
@@ -7,4 +8,42 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="CompositeType" nillable="true" type="tns:CompositeType" />
+  <xs:complexType name="ArrayOfsegmentDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="segmentDetails" type="tns:segmentDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfsegmentDetails" nillable="true" type="tns:ArrayOfsegmentDetails" />
+  <xs:complexType name="segmentDetails">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="hashValue" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="segmentLength" type="xs:long" />
+      <xs:element minOccurs="0" name="startPos" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="segmentDetails" nillable="true" type="tns:segmentDetails" />
+  <xs:complexType name="ArrayOfsegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="segment" type="tns:segment" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfsegment" nillable="true" type="tns:ArrayOfsegment" />
+  <xs:complexType name="segment">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fileChunk" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="segmentLength" type="xs:long" />
+      <xs:element minOccurs="0" name="startPos" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="segment" nillable="true" type="tns:segment" />
 </xs:schema>

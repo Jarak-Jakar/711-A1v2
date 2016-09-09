@@ -1,5 +1,7 @@
 ﻿using CSServices;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Windows;
@@ -82,6 +84,7 @@ namespace Cache
 
         private void viewLogButton_Click(object sender, RoutedEventArgs e)
         {
+            //string filename = filesList.SelectedItem.ToString();
             filesList.Visibility = Visibility.Collapsed;
             logTextBox.Text = System.IO.File.ReadAllText("cachelog.txt");
             logTextBox.Visibility = Visibility.Visible;

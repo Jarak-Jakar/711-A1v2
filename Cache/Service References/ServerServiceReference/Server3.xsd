@@ -57,4 +57,34 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="getLastWriteTime">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="filename" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getLastWriteTimeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getLastWriteTimeResult" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tryCompareFiles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="filename" nillable="true" type="xs:string" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/CSServices" minOccurs="0" name="cacheSegments" nillable="true" type="q5:ArrayOfServerService.segmentDetails" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tryCompareFilesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="tryCompareFilesResult" type="xs:boolean" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/CSServices" minOccurs="0" name="returnedChunks" nillable="true" type="q6:ArrayOfServerService.segment" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>
