@@ -181,8 +181,8 @@ namespace CSServices
             const long mask = (1 << 11) - 1;  // The mask to compare with the rolling hash - this should give 2KiB chunks on average
             long rollinghash = 0;
             int bytesRead = 0;
-            int sbPos = 0;
-            int cbPos = 0;
+            long sbPos = 0;
+            long cbPos = 0;
             long lastStartPos = 0;
             var hasher = new System.Security.Cryptography.SHA256Cng();  // The hash function to create the chunk classification hashes
             long primePower = primeNumber;
@@ -197,6 +197,9 @@ namespace CSServices
                 bytesRead = fs.Read(streamBuffer, 0, streamBufferSize);
                 rollinghash = startHash(streamBuffer, windowSize, primeNumber); // This does kinda assume that the first chunk is larger than the initial windowSize
                 var firstOffset = windowSize;
+                sbPos += firstOffset;
+                cbPos += firstOffset;
+                Array.Copy(streamBuffer, chunkBuffer, firstOffset);
                 hashWindow = new Queue<byte>(new ArraySegment<byte>(streamBuffer, 0, 17));
 
                 while(bytesRead > 0)
@@ -211,12 +214,12 @@ namespace CSServices
 
                         if((rollinghash & mask) == 0)
                         {
-                            yield return new segmentDetails(lastStartPos, cbPos + 1, hasher.ComputeHash(chunkBuffer, 0, cbPos + 1));
-                            Array.Clear(chunkBuffer, 0, cbPos + 1);  // Reset all filled values of the chunk buffer back to zero
+                            yield return new segmentDetails(lastStartPos, sbPos - lastStartPos, hasher.ComputeHash(chunkBuffer, 0, (int)cbPos + 1));
+                            Array.Clear(chunkBuffer, 0, (int)cbPos + 1);  // Reset all filled values of the chunk buffer back to zero
                             cbPos = 0;
                             lastStartPos = sbPos;
                         }
-
+                        sbPos++;
                     }
 
                     firstOffset = 0; // After the first loop, always start at the first byte of the new buffer load
@@ -225,7 +228,7 @@ namespace CSServices
                     
                 }
 
-                yield return new segmentDetails(lastStartPos, sbPos - lastStartPos, hasher.ComputeHash(chunkBuffer, 0, cbPos + 1));  // Hash the final chunk
+                yield return new segmentDetails(lastStartPos, sbPos - lastStartPos, hasher.ComputeHash(chunkBuffer, 0, (int)cbPos + 1));  // Hash the final chunk
                 hasher.Dispose();
             }
         }
@@ -253,6 +256,9 @@ namespace CSServices
                     } 
                 }
             }
+            tCF_returnedChunks = tCF_returnedChunks.OrderBy(chunk => chunk.startPos).ToList();
+            //tCF_serverDetails.OrderBy(detail => detail.startPos);
+
             return difference;
         }
 

@@ -73,7 +73,7 @@ namespace CSServices
     }
 
     [DataContract]
-    public struct segmentDetails
+    public struct segmentDetails : IEquatable<segmentDetails>
     {
         [DataMember]
         public readonly long startPos;
@@ -91,9 +91,9 @@ namespace CSServices
             this.hashValue = hashValue;
         }
 
-        public bool Equals(segmentDetails sd)
+        public bool Equals(segmentDetails sd2)
         {
-            return (hashValue.SequenceEqual(sd.hashValue));
+            return (hashValue.SequenceEqual(sd2.hashValue));
         }
     }
 
@@ -121,6 +121,19 @@ namespace CSServices
             this.startPos = sd.startPos;
             this.segmentLength = sd.segmentLength;
             this.fileChunk = fileChunk;
+        }
+    }
+
+    public class segmentDetailsEqualityComparer: IEqualityComparer<segmentDetails>
+    {
+        public bool Equals(segmentDetails sd, segmentDetails sd2)
+        {
+            return (sd.Equals(sd2));
+        }
+
+        public int GetHashCode(segmentDetails sd)
+        {
+            return sd.hashValue.GetHashCode();
         }
     }
 }

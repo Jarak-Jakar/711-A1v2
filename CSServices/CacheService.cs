@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CSServices;
+using CSServices.ContractTypes;
+using CSServices.ServerServiceReference;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,10 +10,6 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Windows;
-using CSServices;
-using CSServices.ServerServiceReference;
-using CSServices.ContractTypes;
-using System.Collections;
 
 namespace CSServices
 {
@@ -38,7 +38,7 @@ namespace CSServices
             {
                 if (File.Exists(Directory.GetCurrentDirectory() + "/cache/" + fileName))
                 {
-                    if (!hasFileBeenUpdated(fileName))
+                    if (false) //if (!hasFileBeenUpdated(fileName))
                     {
                         using (StreamWriter logout = new StreamWriter(cachelog, true))
                         {
@@ -78,7 +78,7 @@ namespace CSServices
                             //fetchfile.Seek(0, SeekOrigin.Begin);
                             fetchfile.CopyTo(cachefile);
                             cachefile.Flush();
-                        } 
+                        }
                     }
                     return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -110,59 +110,79 @@ namespace CSServices
         private void updateCachedFile(string filename)
         {
             var cacheDetails = server.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToList();
+            cacheDetails = cacheDetails.OrderBy(chunk => chunk.startPos).ToList() ;
             //var cacheDetails = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToArray();
             List<ServerServiceReference.segment> newServerChunks; //= server.compareFiles(filename, cacheDetails);
             List<ServerServiceReference.segmentDetails> serverDetails;
             bool isDifferent = server.tCompareFiles(filename, cacheDetails, out newServerChunks, out serverDetails);
-            if(isDifferent)
+            if(true)  //if (isDifferent)
             {
-                using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/cache/" + filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                using (var hasher = new System.Security.Cryptography.SHA256Cng())
                 {
-                    using (var hasher = new System.Security.Cryptography.SHA256Cng())
+                    List<ServerServiceReference.segment> cacheChunks = new List<ServerServiceReference.segment>(cacheDetails.Count);
+                    using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/cache/" + filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                     {
-                        List<ServerServiceReference.segment> cacheChunks = new List<ServerServiceReference.segment>(cacheDetails.Count);
+
 
                         // Create the chunks that are already cached
                         foreach (var detail in cacheDetails)
                         {
                             fs.Seek(detail.startPos, SeekOrigin.Begin);
                             var temp1 = new byte[detail.segmentLength];
-                            fs.Read(new byte[detail.segmentLength], 0, (int)detail.segmentLength);
+                            fs.Read(temp1, 0, (int)detail.segmentLength);
                             var temp2 = new ServerServiceReference.segment() { segmentLength = detail.segmentLength, startPos = detail.startPos, fileChunk = temp1 };
                             cacheChunks.Add(temp2);
                         }
+                    }
 
-                        // Go through the serverDetails list, and put the right chunks in the right places
-                        for(int i = 0; i < serverDetails.Count; i++)
+                    //fs.SetLength(serverDetails.Last().startPos + serverDetails.Last().segmentLength - 1);
+                    using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/cache/" + filename, FileMode.Truncate, FileAccess.Write, FileShare.None))
+                    {
+
+                        using (BinaryWriter bw = new BinaryWriter(fs))
                         {
-                            var detail = serverDetails[i];
-                            fs.Seek(detail.startPos, SeekOrigin.Begin);
-                            bool foundInCache = false;
-                            for(int j = 0; j < cacheDetails.Count; j++)
+                            // Go through the serverDetails list, and put the right chunks in the right places
+                            for (int i = 0; i < serverDetails.Count; i++)
                             {
-                                if (detail.hashValue.SequenceEqual(cacheDetails[j].hashValue))
+                                var detail = serverDetails[i];
+                                //fs.Seek(detail.startPos, SeekOrigin.Begin);
+                                bool foundInCache = false;
+                                for (int j = 0; j < cacheDetails.Count; j++)
                                 {
-                                    fs.Write(cacheChunks[j].fileChunk, (int) cacheChunks[j].startPos, (int) cacheChunks[j].segmentLength);
-                                    foundInCache = true;
-                                    break;
+                                    if (detail.hashValue.SequenceEqual(cacheDetails[j].hashValue))
+                                    {
+                                        //fs.Write(cacheChunks[j].fileChunk, 0, cacheChunks[j].fileChunk.Length);
+                                        bw.Write(cacheChunks[j].fileChunk);
+                                        foundInCache = true;
+                                        cacheDetails.RemoveAt(j);
+                                        cacheChunks.RemoveAt(j);
+                                        break;
+                                    }
                                 }
-                            }
-                            if (foundInCache)
-                            {
-                                continue;
-                            }
-
-                            //fs.Write(newServerChunks[i].fileChunk, (int) newServerChunks[i].startPos, (int) newServerChunks[i].segmentLength);
-
-                            for(int j = 0; j < newServerChunks.Count; j++)
-                            {
-                                if(detail.startPos == newServerChunks[j].startPos)
+                                if (foundInCache)
                                 {
-                                    fs.Write(newServerChunks[j].fileChunk, (int)newServerChunks[j].startPos, (int)newServerChunks[j].segmentLength);
-                                    break;
+                                    continue;
                                 }
+
+                                //fs.Write(newServerChunks[i].fileChunk, (int) newServerChunks[i].startPos, (int) newServerChunks[i].segmentLength);
+
+                                for (int j = 0; j < newServerChunks.Count; j++)
+                                {
+                                    if (detail.startPos == newServerChunks[j].startPos)
+                                    {
+                                        //fs.Write(newServerChunks[j].fileChunk, 0, (int)newServerChunks[j].segmentLength);
+                                        bw.Write(newServerChunks[j].fileChunk);
+                                        newServerChunks.RemoveAt(j);
+                                        break;
+                                    }
+                                }
+
+                                //fs.Flush();
+
                             }
-                        } 
+                        }
+
+                        //fs.Flush();
                     }
                 }
             }
