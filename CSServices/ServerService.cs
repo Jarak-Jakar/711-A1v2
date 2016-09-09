@@ -242,7 +242,11 @@ namespace CSServices
 
             using (FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "/server/" + tCF_filename, FileMode.Open, FileAccess.Read))
             {
+                //var diffs = tCF_serverDetails.AsParallel().Except(tCF_cacheSegments.AsParallel(), new segmentDetailsEqualityComparer());
                 var diffs = tCF_serverDetails.AsParallel().Except(tCF_cacheSegments.AsParallel());
+                int serverhash = tCF_serverDetails.First().GetHashCode();
+                int cachehash = tCF_cacheSegments.First().GetHashCode();
+                bool test = tCF_cacheSegments.First().Equals(tCF_serverDetails.First());
                 if (diffs.Count() > 0)
                 {
                     difference = true;

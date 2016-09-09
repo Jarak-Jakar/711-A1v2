@@ -38,7 +38,7 @@ namespace CSServices
             {
                 if (File.Exists(Directory.GetCurrentDirectory() + "/cache/" + fileName))
                 {
-                    if (false) //if (!hasFileBeenUpdated(fileName))
+                    if (!hasFileBeenUpdated(fileName))
                     {
                         using (StreamWriter logout = new StreamWriter(cachelog, true))
                         {
@@ -50,11 +50,11 @@ namespace CSServices
                     }
                     else
                     {
-                        updateCachedFile(fileName);
+                        double percentreused = updateCachedFile(fileName);
                         using (StreamWriter logout = new StreamWriter(cachelog, true))
                         {
                             logout.WriteLineAsync(string.Format("\n\nUser request: Get file {0} at {1}", fileName, DateTime.Now.ToString("f")));
-                            logout.WriteLineAsync(string.Format("Response: Server file is modified compared to cache.  Returned file {0} from cache after updating from server\n\n", fileName));
+                            logout.WriteLineAsync(string.Format("Response: Server file is modified compared to cache.  Returned file {0} from cache after updating from server.  {1:0.00%} of file was reconstructed using cached data.\n\n", fileName, percentreused));
                         }
                         return new FileStream(Directory.GetCurrentDirectory() + "/cache/" + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                     }
@@ -107,15 +107,24 @@ namespace CSServices
             return result > 0;
         }
 
-        private void updateCachedFile(string filename)
+        private double updateCachedFile(string filename)
         {
+            long totalfilesize = 0;
+            long serverchunkssize = 0;
             var cacheDetails = server.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToList();
             cacheDetails = cacheDetails.OrderBy(chunk => chunk.startPos).ToList() ;
             //var cacheDetails = ServerService.chunkFile(Directory.GetCurrentDirectory() + "/cache/" + filename).ToArray();
             List<ServerServiceReference.segment> newServerChunks; //= server.compareFiles(filename, cacheDetails);
             List<ServerServiceReference.segmentDetails> serverDetails;
             bool isDifferent = server.tCompareFiles(filename, cacheDetails, out newServerChunks, out serverDetails);
-            if(true)  //if (isDifferent)
+            totalfilesize = serverDetails.Last().startPos + serverDetails.Last().segmentLength;
+
+            foreach (var chunk in newServerChunks)
+            {
+                serverchunkssize += chunk.segmentLength;
+            }
+
+            if (isDifferent)
             {
                 using (var hasher = new System.Security.Cryptography.SHA256Cng())
                 {
@@ -186,6 +195,8 @@ namespace CSServices
                     }
                 }
             }
+
+            return ((totalfilesize - serverchunkssize) / (totalfilesize * 1.0));
         }
     }
 }

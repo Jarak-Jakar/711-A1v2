@@ -95,6 +95,23 @@ namespace CSServices
         {
             return (hashValue.SequenceEqual(sd2.hashValue));
         }
+
+        /*public override bool Equals(object obj)
+        {
+            return Equals(obj as segmentDetails);
+        }*/
+
+        public override int GetHashCode()
+        {
+            int hash = 7;
+            foreach (var piece in hashValue)
+            {
+                hash = hash * 3 + piece.GetHashCode();
+            }
+
+            return hash;
+            //return hashValue.GetHashCode();
+        }
     }
 
     [DataContract]
@@ -124,14 +141,14 @@ namespace CSServices
         }
     }
 
-    public class segmentDetailsEqualityComparer: IEqualityComparer<segmentDetails>
+    public class segmentDetailsEqualityComparer: EqualityComparer<segmentDetails>
     {
-        public bool Equals(segmentDetails sd, segmentDetails sd2)
+        public override bool Equals(segmentDetails sd, segmentDetails sd2)
         {
             return (sd.Equals(sd2));
         }
 
-        public int GetHashCode(segmentDetails sd)
+        public override int GetHashCode(segmentDetails sd)
         {
             return sd.hashValue.GetHashCode();
         }
